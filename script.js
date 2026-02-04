@@ -15,16 +15,17 @@ document.addEventListener('DOMContentLoaded', function(){
 
 		// update the subtitle text and move it up; remove the header logo/heading
 		const header = document.querySelector('.site-header');
+		let subtitle;
 		if(header){
-			const subtitle = header.querySelector('.subtitle');
+			subtitle = header.querySelector('.subtitle');
 			if(subtitle){
-				subtitle.textContent = 'Click the hearts~';
-				subtitle.classList.add('subtitle--up');
+				// hide existing subtitle until hearts settle
+				subtitle.classList.add('subtitle--hidden');
 			} else {
-				const p = document.createElement('p');
-				p.className = 'subtitle subtitle--up';
-				p.textContent = 'Click the hearts~';
-				header.appendChild(p);
+				// create hidden subtitle to show later
+				subtitle = document.createElement('p');
+				subtitle.className = 'subtitle subtitle--hidden';
+				header.appendChild(subtitle);
 			}
 
 			const h1 = header.querySelector('h1');
@@ -32,6 +33,19 @@ document.addEventListener('DOMContentLoaded', function(){
 			const hh = header.querySelector('.header-heart');
 			if(hh) hh.remove();
 		}
+
+		// after open animation finishes, move box away and center/enlarge hearts
+		setTimeout(()=>{
+			container.classList.add('settled');
+			// when settled transitions complete, reveal and move up the subtitle
+			setTimeout(()=>{
+				if(subtitle){
+					subtitle.textContent = 'Click the hearts~';
+					subtitle.classList.remove('subtitle--hidden');
+					subtitle.classList.add('subtitle--up');
+				}
+			}, 650);
+		}, 900);
 	}
 
 	box.addEventListener('click', activateBox);
@@ -43,4 +57,56 @@ document.addEventListener('DOMContentLoaded', function(){
 			activateBox();
 		}
 	});
+
+	// ---- heart modal behavior ----
+	const modal = document.getElementById('heartModal');
+	const modalImg = document.getElementById('modalHeartImg');
+	const modalText = document.getElementById('modalHeartText');
+	const modalCloseBtn = modal ? modal.querySelector('.modal-close') : null;
+	let currentHeart = null;
+
+	function openModalForHeart(heartEl){
+		if(!modal) return;
+		const closeup = heartEl.dataset.closeup || heartEl.getAttribute('src') || '';
+		modalImg.src = closeup;
+		modalImg.alt = heartEl.alt || '';
+		if(modalText) modalText.textContent = heartEl.dataset.text || heartEl.alt || '';
+		modal.classList.add('open');
+		modal.setAttribute('aria-hidden','false');
+		currentHeart = heartEl;
+	}
+
+	function closeModal(){
+		if(!modal) return;
+		modal.classList.remove('open');
+		modal.setAttribute('aria-hidden','true');
+		modalImg.src = '';
+		if(modalText) modalText.textContent = '';
+
+		// replace the heart image with the crumb image (if provided)
+		if(currentHeart && currentHeart.dataset.crumb){
+			currentHeart.src = currentHeart.dataset.crumb;
+			currentHeart.classList.add('crumbed');
+		}
+		currentHeart = null;
+	}
+
+	// attach click handlers to hearts; only active once container is settled
+	const hearts = document.querySelectorAll('.heart');
+	hearts.forEach(h=>{
+		h.addEventListener('click', function(e){
+			// ignore if not settled yet or this heart has been crumbed (disabled)
+			if(!container.classList.contains('settled')) return;
+			if(h.classList.contains('crumbed')) return;
+			openModalForHeart(h);
+		});
+	});
+
+	// close interactions
+	if(modalCloseBtn) modalCloseBtn.addEventListener('click', closeModal);
+	if(modal){
+		modal.addEventListener('click', function(e){
+			if(e.target === modal || e.target.classList.contains('modal-backdrop')) closeModal();
+		});
+	}
 });
