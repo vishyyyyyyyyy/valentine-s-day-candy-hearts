@@ -103,15 +103,15 @@ body{
     color:#c94a6a;
     font-size:25px;
     margin: -50px;
-
+    transition: transform .6s cubic-bezier(.2,.9,.3,1), opacity .4s ease;
 }
 
-/* animate subtitle upward when box opens */
-.subtitle{
-    transition:transform .6s cubic-bezier(.2,.9,.3,1), opacity .4s ease;
+/* subtitle visibility states */
+.subtitle--hidden{
+    opacity:0;
 }
 .subtitle--up{
-    transform:translateY(200px);
+    transform: translateY(180px);
     opacity:1;
 }
 
@@ -120,7 +120,7 @@ body{
     display:flex;
     align-items:center;
     justify-content:center;
-    z-index:2;
+    z-index:3; /* above lace (z-index:1) */
 }
 
 .box{
@@ -154,7 +154,7 @@ body{
     justify-content:center;
     transform-origin:center center;
     transition:transform .7s cubic-bezier(.2,.9,.3,1), left .7s, top .7s;
-    z-index:3;
+    z-index:5; /* ensure box is above lace and header */
 }
 
 .hearts{
@@ -164,6 +164,7 @@ body{
     width:100%;
     height:100%;
     pointer-events:none;
+    z-index:4; /* above lace */
 }
 .heart{
     position:absolute;
@@ -172,8 +173,138 @@ body{
     transform:translateX(-10px) translateY(10px) scale(.86);
     opacity:0;
     filter:drop-shadow(0 6px 0 rgba(0,0,0,0.08));
-    transition:transform .6s cubic-bezier(.2,.9,.3,1), opacity .45s ease;
-    z-index:2;
+    transition: transform .6s cubic-bezier(.2,.9,.3,1), opacity .45s ease, left .6s ease, top .6s ease, width .5s ease;
+    z-index:4;
+}
+
+/* disable interaction when a heart has been crumbed */
+.heart.crumbed{
+    pointer-events:none;
+    cursor:default;
+    opacity:1;
+}
+
+/* crumb pieces that appear after a heart was opened */
+.heart.crumbed{--crumb-color:#f6cbd6}
+.heart.crumbed .crumb-piece{
+    position:absolute;
+    width:10px;
+    height:10px;
+    border-radius:50%;
+    background:var(--crumb-color);
+    box-shadow:0 2px 0 rgba(0,0,0,0.06);
+    opacity:0;
+    transform:scale(.6) translateY(0);
+    transition:opacity .32s ease, transform .36s cubic-bezier(.2,.9,.3,1);
+    pointer-events:none;
+}
+.heart.crumbed .crumb-piece.p1{
+    left:-18px;
+    top:58px;
+    background:#f7d9e0;
+    width:8px;
+    height:8px;
+}
+.heart.crumbed .crumb-piece.p2{
+    left:-8px;
+    top:66px;
+    background:#f4c7d3;
+    width:11px;
+    height:11px;
+}
+.heart.crumbed .crumb-piece.p3{
+    left:-26px;
+    top:48px;
+    background:#f9e0e8;
+    width:6px;
+    height:6px;
+}
+.heart.crumbed .crumb-piece.show{
+    opacity:1;
+    transform:scale(1) translateY(-6px);
+}
+
+/* allow clicking hearts only after settled state */
+.box-container.settled .hearts{pointer-events:auto}
+.box-container.settled .heart{cursor:pointer}
+
+/* modal overlay for closeups */
+.modal{
+    display:none;
+    position:fixed;
+    inset:0;
+    z-index:30;
+    align-items:center;
+    justify-content:center;
+}
+.modal.open{
+    display:flex;
+}
+.modal-backdrop{
+    position:absolute;
+    inset:0;
+    background:rgba(0,0,0,0.35);
+}
+.modal-content{
+    position:relative;
+    background:transparent;
+    border-radius:12px;
+    padding:0;
+    max-width:980px;
+    width:92%;
+    display:flex;
+    align-items:center;
+    justify-content:center
+}
+.modal-close{
+    position:absolute;
+    right:-20px;
+    top:-20px;
+    width:48px;
+    height:48px;
+    display:flex;
+    align-items:center;
+    justify-content:center;
+    border:0;
+    box-shadow:0 6px 0 rgba(0,0,0,0.08);
+    cursor:pointer;
+    z-index:22
+}
+.modal-close img{
+    width:20px;
+    height:20px;
+}
+.modal-heart-wrap{
+    background:transparent;
+    display:flex;
+    flex-direction:column;
+    align-items:center;
+    justify-content:center;
+    position:relative;
+}
+.modal-heart-wrap img{
+    width:520px;
+    max-width:80vw;
+    display:block;
+}
+.modal-close{
+    position:absolute;
+    right:40px;
+    top:0px;
+    background:#fff;
+    border-radius:50%;
+    width:48px;height:48px;
+    display:flex;
+    align-items:center;
+    justify-content:center;
+    border:0;
+    box-shadow:0 6px 0 rgba(0,0,0,0.08);
+    cursor:pointer;
+    z-index:22;
+}
+.modal-close img{
+    width:20px;
+    height:20px;
 }
 
 /* initial stacked positions */
@@ -192,16 +323,51 @@ body{
 
 /* open state: box rotates and moves to side; hearts slide out with stagger */
 .box-container.open .box{ 
-    transform:translate(-400px,-45px) rotate(120deg) scale(.98)}
-.box-container.open .heart{opacity:1; transform:translateX(0) translateY(0) scale(1)}
-.box-container.open .heart.loveya{left:55%; top:40%; transition-delay:0.06s}
-.box-container.open .heart.xoxo{left:30%; top:90%; transition-delay:0.12s}
-.box-container.open .heart.urcute{left:80%; top:100%; transition-delay:0.18s}
+    transform:translate(-400px,-45px) rotate(120deg) scale(.98);
+}
+.box-container.open .heart{
+    opacity:1; 
+    transform:translateX(0) translateY(0) scale(1);
+}
+.box-container.open .heart.loveya{
+    left:55%;
+    top:40%;
+    transition-delay:0.06s;
+}
+.box-container.open .heart.xoxo{
+    left:30%;
+    top:90%;
+    transition-delay:0.12s;
+}
+.box-container.open .heart.urcute{
+    left:80%; 
+    top:100%; 
+    transition-delay:0.18s;
+}
+
+/* after initial open animation finishes, move box away and center/enlarge hearts */
+.box-container.settled{
+    width:100%;
+    max-width:100vw;
+}
+.box-container.settled .box{
+    transform:translateY(-160%) scale(.7);
+    opacity:0;
+    transition: transform .6s ease, opacity .45s ease;
+}
+.box-container.settled .heart{
+    width:160px;
+    transform:translate(-50%,-50%) scale(1.06);
+    transition: transform .6s cubic-bezier(.2,.9,.3,1), left .6s ease, top .6s ease, width .5s ease;
+}
+.box-container.settled .heart.loveya{left:-50%; top:50%; transition-delay:0s}
+.box-container.settled .heart.xoxo{left:50%; top:50%; transition-delay:0s}
+.box-container.settled .heart.urcute{left:150%; top:50%; transition-delay:0s}
 
 
 @media (max-width:520px){
     .header-heart{width:40px;top:-12px}
     .subtitle{font-size:18px}
     .box img{width:260px}
-    .subtitle--up{transform:translateY(-68px)}
+    .subtitle--up{transform:translateY(-70px)}
 }
