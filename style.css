@@ -1,0 +1,207 @@
+:root{
+    --bg:#FFE2EA;
+    --pink-1:#FFB3C6;
+    --pink-2:#FA5D81;
+    --pink-3:#B9164A;
+    --pink-4:#FB92AB;
+    --text:#B9164A;
+}
+
+*{box-sizing:border-box}
+html,body{height:100%}
+body{
+    margin:0;
+    min-height:100vh;
+    display:flex;
+    flex-direction:column;
+    align-items:center;
+    background:var(--bg);
+    color:var(--text);
+    -webkit-font-smoothing:antialiased;
+    -moz-osx-font-smoothing:grayscale;
+}
+
+#top-lace, #bottom-lace{
+    width:100%;
+    pointer-events:none;
+    display:block;
+}
+
+#top-lace{
+    position:fixed;
+    top:0;
+    left:0;
+    z-index:1;
+}
+#bottom-lace{
+    position:fixed;
+    bottom:0;
+    left:0;
+    z-index:1;
+}
+
+.site-header{
+    z-index:2;
+    text-align:center;
+    position:relative;
+    display: flex;
+    flex-direction: column;
+    margin-bottom: 0;
+    margin-block-end: 0;
+    margin-block-start: 0px;
+
+}
+.site-header h1{
+    padding-top:30px;
+    font-family: 'Lilita One', cursive;
+    font-size:clamp(40px,8vw,110px);
+    line-height:1;
+    display:inline-block;
+}
+.site-header h1 span{
+    display:inline-block;
+}
+
+.l1{
+    color:var(--pink-1);
+    text-shadow:0 5px 0 rgba(0,0,0,0.1);
+}
+.l2{
+    color:var(--pink-2);
+    text-shadow:0 5px 0 rgba(0,0,0,0.1);
+}
+.l3{
+    color:transparent;
+}
+.l4{
+    color:var(--pink-3);
+    text-shadow:0 5px 0 rgba(0,0,0,0.1);
+}
+.l5{
+    color:var(--pink-2);
+    text-shadow:0 5px 0 rgba(0,0,0,0.1);
+}
+.l6{
+    color:var(--pink-4);
+    text-shadow:0 5px 0 rgba(0,0,0,0.1);
+}
+.l7{
+    color:var(--pink-1);
+    text-shadow:0 5px 0 rgba(0,0,0,0.1);
+}
+
+.header-heart{
+    width:56px;
+    position:relative;
+    top:-24px;
+    left:12px;
+    vertical-align:middle;
+}
+
+.subtitle{
+    font-family: 'Hi Melody', cursive;
+    color:#c94a6a;
+    font-size:25px;
+    margin: -50px;
+
+}
+
+/* animate subtitle upward when box opens */
+.subtitle{
+    transition:transform .6s cubic-bezier(.2,.9,.3,1), opacity .4s ease;
+}
+.subtitle--up{
+    transform:translateY(200px);
+    opacity:1;
+}
+
+.main-area{
+    flex:1;
+    display:flex;
+    align-items:center;
+    justify-content:center;
+    z-index:2;
+}
+
+.box{
+    display:inline-block;
+    cursor:pointer;
+    transition:transform .18s ease, box-shadow .18s ease;
+}
+.box img{
+    width:360px;
+    max-width:60vw;
+    border-radius:8px; 
+    padding:12px;
+    display:block;
+}
+.box.pressed img, .box:active img{transform:translateY(4px) scale(.99)}
+
+/* container to position the box and the floating hearts */
+.box-container{
+    position:relative;
+    width:720px;
+    max-width:90vw;
+    height:360px;
+    display:flex;
+    align-items:center;
+    justify-content:center;
+}
+
+.box{
+    position:relative;
+    display:inline-flex;
+    justify-content:center;
+    transform-origin:center center;
+    transition:transform .7s cubic-bezier(.2,.9,.3,1), left .7s, top .7s;
+    z-index:3;
+}
+
+.hearts{
+    position:absolute;
+    left:0;
+    top:0;
+    width:100%;
+    height:100%;
+    pointer-events:none;
+}
+.heart{
+    position:absolute;
+    width:88px;
+    max-width:16vw;
+    transform:translateX(-10px) translateY(10px) scale(.86);
+    opacity:0;
+    filter:drop-shadow(0 6px 0 rgba(0,0,0,0.08));
+    transition:transform .6s cubic-bezier(.2,.9,.3,1), opacity .45s ease;
+    z-index:2;
+}
+
+/* initial stacked positions */
+.heart.loveya{
+    left:40%;
+    top:24%
+}
+.heart.xoxo{
+    left:46%;
+    top:44%
+}
+.heart.urcute{
+    left:54%;
+    top:58%
+}
+
+/* open state: box rotates and moves to side; hearts slide out with stagger */
+.box-container.open .box{ 
+    transform:translate(-400px,-45px) rotate(120deg) scale(.98)}
+.box-container.open .heart{opacity:1; transform:translateX(0) translateY(0) scale(1)}
+.box-container.open .heart.loveya{left:55%; top:40%; transition-delay:0.06s}
+.box-container.open .heart.xoxo{left:30%; top:90%; transition-delay:0.12s}
+.box-container.open .heart.urcute{left:80%; top:100%; transition-delay:0.18s}
+
+
+@media (max-width:520px){
+    .header-heart{width:40px;top:-12px}
+    .subtitle{font-size:18px}
+    .box img{width:260px}
+    .subtitle--up{transform:translateY(-68px)}
+}
