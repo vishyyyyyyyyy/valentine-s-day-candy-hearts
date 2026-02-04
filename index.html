@@ -31,12 +31,25 @@
                 <img src="assets/box.svg" alt="sweethearts box">
             </div>
             <div class="hearts" aria-hidden="true">
-                <img src="assets/loveya.svg" class="heart loveya" alt="LOVE YA">
-                <img src="assets/xoxo.svg" class="heart xoxo" alt="XOXO">
-                <img src="assets/urcute.svg" class="heart urcute" alt="UR CUTE">
+                <img src="assets/loveya.svg" class="heart loveya" alt="LOVE YA" data-closeup="assets/closeupheart1.svg" data-crumb="assets/loveyacrumbs.svg">
+                <img src="assets/xoxo.svg" class="heart xoxo" alt="XOXO" data-closeup="assets/closeupheart2.svg" data-crumb="assets/xoxocrumbs.svg">
+                <img src="assets/urcute.svg" class="heart urcute" alt="UR CUTE" data-closeup="assets/closeupheart3.svg" data-crumb="assets/urcutecrumbs.svg">
             </div>
         </div>
     </main>
+
+    <!-- modal for heart closeups -->
+    <div id="heartModal" class="modal" aria-hidden="true">
+        <div class="modal-backdrop"></div>
+        <div class="modal-content" role="dialog" aria-modal="true">
+            <div class="modal-heart-wrap">
+                <button class="modal-close" aria-label="Close heart">
+                    <img src="assets/closebutton.svg" alt="close">
+                </button>
+                <img id="modalHeartImg" src="" alt="">
+            </div>
+        </div>
+    </div>
 
     <img src="assets/bottomlace.png" alt="lace" id="bottom-lace">
 </body>
