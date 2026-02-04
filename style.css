@@ -129,8 +129,9 @@ body{
     transition:transform .18s ease, box-shadow .18s ease;
 }
 .box img{
-    width:360px;
-    max-width:60vw;
+    width: clamp(220px, 48vw, 360px);
+    max-width:100%;
+    height:auto;
     border-radius:8px; 
     padding:12px;
     display:block;
@@ -140,12 +141,13 @@ body{
 /* container to position the box and the floating hearts */
 .box-container{
     position:relative;
-    width:720px;
-    max-width:90vw;
-    height:360px;
+    width: min(720px, 90vw);
+    max-width:100%;
+    aspect-ratio: 2 / 1;
     display:flex;
     align-items:center;
     justify-content:center;
+    padding: 1vh 2vw; /* allow room for absolute hearts */
 }
 
 .box{
@@ -168,8 +170,8 @@ body{
 }
 .heart{
     position:absolute;
-    width:88px;
-    max-width:16vw;
+    width: clamp(56px, 14vw, 120px);
+    max-width:28vw;
     transform:translateX(-10px) translateY(10px) scale(.86);
     opacity:0;
     filter:drop-shadow(0 6px 0 rgba(0,0,0,0.08));
@@ -356,7 +358,7 @@ body{
     transition: transform .6s ease, opacity .45s ease;
 }
 .box-container.settled .heart{
-    width:160px;
+    width: clamp(100px, 36vw, 160px);
     transform:translate(-50%,-50%) scale(1.06);
     transition: transform .6s cubic-bezier(.2,.9,.3,1), left .6s ease, top .6s ease, width .5s ease;
 }
@@ -366,8 +368,67 @@ body{
 
 
 @media (max-width:520px){
-    .header-heart{width:40px;top:-12px}
-    .subtitle{font-size:18px}
-    .box img{width:260px}
-    .subtitle--up{transform:translateY(-70px)}
+    .site-header h1{ 
+        font-size: clamp(48px, 10vw, 88px); 
+    }
+    .header-heart{
+        width:64px; 
+        top:-18px; 
+        left:8px;
+    }
+    .subtitle{
+        font-size:20px;
+        margin:0;
+        position:relative;
+        z-index:6; 
+        text-align:center;
+    }
+    .box img{ 
+        width: clamp(240px, 56vw, 320px); 
+    }
+    .subtitle--up{
+        transform:translateY(100px);
+        opacity:1;
+    }
+
+    #top-lace, #bottom-lace{ max-height:140px; width:100%; object-fit:cover; }
+
+    /* spread hearts horizontally so they don't overlap on small screens */
+    .box-container.open .heart.loveya{ left:62%; top:38%; }
+    .box-container.open .heart.xoxo{ left:32%; top:78%; }
+    .box-container.open .heart.urcute{ left:82%; top:84%; }
+
+    .box-container.settled .heart.loveya{ left:6%; top:50%; }
+    .box-container.settled .heart.xoxo{ left:50%; top:50%; }
+    .box-container.settled .heart.urcute{ left:94%; top:50%; }
+}
+
+@media (max-width:900px){
+    /* reduce the box shift when opening on narrower screens */
+    .box-container.open .box{
+        transform:translate(-24vw,-32px) rotate(100deg) scale(.95);
+    }
+    /* nudge heart targets so they don't overflow vertically */
+    .box-container.open .heart.loveya{ left:56%; top:36%; }
+    .box-container.open .heart.xoxo{ left:28%; top:82%; }
+    .box-container.open .heart.urcute{ left:78%; top:92%; }
+    .box-container.settled .heart{ width: clamp(90px, 32vw, 140px); }
+    .modal-heart-wrap img{ max-width:86vw; }
+}
+
+@media (max-width:420px){
+    .site-header h1{ padding-top:12px; }
+    .subtitle{ margin: 0; }
+    .box-container{ aspect-ratio: 1.4 / 1; }
+    .box-container.open .box{ transform:translate(-18vw,-12px) rotate(90deg) scale(.92); }
+    .box-container.open .heart.loveya{ left:56%; top:34%; }
+    .box-container.open .heart.xoxo{ left:32%; top:78%; }
+    .box-container.open .heart.urcute{ left:76%; top:86%; }
+    .box-container.settled .heart{ width: clamp(80px, 40vw, 140px); }
+    .header-heart{ width:36px; top:-10px }
+    .modal-close{ right:12px; top:8px }
+    /* ensure settled hearts stay separated on very small screens as well */
+    .box-container.settled .heart.loveya{ left:4%; top:50%; }
+    .box-container.settled .heart.xoxo{ left:50%; top:50%; }
+    .box-container.settled .heart.urcute{ left:96%; top:50%; }
 }
