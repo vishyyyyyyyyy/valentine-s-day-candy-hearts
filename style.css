@@ -111,7 +111,7 @@ body{
     opacity:0;
 }
 .subtitle--up{
-    transform: translateY(180px);
+    transform: translateY(160px);
     opacity:1;
 }
 
@@ -120,7 +120,7 @@ body{
     display:flex;
     align-items:center;
     justify-content:center;
-    z-index:3; /* above lace (z-index:1) */
+    z-index:3; 
 }
 
 .box{
@@ -246,6 +246,17 @@ body{
     position:absolute;
     inset:0;
     background:rgba(0,0,0,0.35);
+}
+/* when JS marks the modal as 'no-backdrop', make the backdrop clear and non-interactive */
+.modal.no-backdrop .modal-backdrop{
+    background: transparent;
+    pointer-events: none;
+}
+
+/* hide the close button when modal is in 'no-close' state */
+.modal.no-close .modal-close{
+    display: none;
+    visibility: hidden;
 }
 .modal-content{
     position:relative;
