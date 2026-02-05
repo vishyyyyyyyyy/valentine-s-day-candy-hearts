@@ -67,26 +67,102 @@ document.addEventListener('DOMContentLoaded', function(){
 
 	function openModalForHeart(heartEl){
 		if(!modal) return;
-		const closeup = heartEl.dataset.closeup || heartEl.getAttribute('src') || '';
+		let closeup = heartEl.dataset.closeup || heartEl.getAttribute('src') || '';
+		// if this heart is the temporary smile heart (or already the final candy),
+		// show the final candy closeup in the modal instead of the default closeup
+		const src = heartEl.getAttribute('src') || '';
+		let specialCase = false;
+		if(src.indexOf('smileheart.svg') !== -1 || src.indexOf('finalcandyheart.svg') !== -1){
+			closeup = 'assets/cats/finalcandyheart.svg';
+			// show final candy in the middle and YES images on sides
+			const center = document.querySelector('.heart.xoxo');
+			const left = document.querySelector('.heart.loveya');
+			const right = document.querySelector('.heart.urcute');
+			const subtitle = document.querySelector('.subtitle');;
+			if(subtitle){
+					subtitle.textContent = 'Choose wisely >:(';
+			}
+
+			if(center){
+				center.src = 'assets/cats/finalcandyheart.svg';
+				center.alt = 'final candy heart';
+			}
+			if(left){
+				left.src = 'assets/yes1.svg';
+				left.alt = 'YES';
+				left.classList.remove('crumbed');
+				left.dataset.crumb = '';
+			}
+			if(right){
+				right.src = 'assets/yes2.svg';
+				right.alt = 'YES';
+				right.classList.remove('crumbed');
+				right.dataset.crumb = '';
+			}
+			// open modal without backdrop or close button for this special case
+			modal.classList.add('no-backdrop','no-close');
+			specialCase = true;
+		}
 		modalImg.src = closeup;
-		modalImg.alt = heartEl.alt || '';
+		modalImg.alt = (src.indexOf('finalcandyheart.svg') !== -1 || src.indexOf('smileheart.svg') !== -1) ? 'final candy' : (heartEl.alt || '');
 		if(modalText) modalText.textContent = heartEl.dataset.text || heartEl.alt || '';
 		modal.classList.add('open');
 		modal.setAttribute('aria-hidden','false');
-		currentHeart = heartEl;
+		currentHeart = specialCase ? null : heartEl;
 	}
 
 	function closeModal(){
 		if(!modal) return;
 		modal.classList.remove('open');
+		// ensure any special modal flags are cleared
+		modal.classList.remove('no-backdrop','no-close');
 		modal.setAttribute('aria-hidden','true');
 		modalImg.src = '';
 		if(modalText) modalText.textContent = '';
+
+		// (smile-heart handling moved to openModalForHeart)
 
 		// replace the heart image with the crumb image (if provided)
 		if(currentHeart && currentHeart.dataset.crumb){
 			currentHeart.src = currentHeart.dataset.crumb;
 			currentHeart.classList.add('crumbed');
+
+			// if all hearts are crumbed, update the subtitle to the final message
+			const allHearts = document.querySelectorAll('.heart');
+			const crumbed = document.querySelectorAll('.heart.crumbed');
+			if(allHearts.length > 0 && crumbed.length === allHearts.length){
+				const header = document.querySelector('.site-header');
+				if(header){
+					let subtitle = header.querySelector('.subtitle');
+					if(!subtitle){
+						subtitle = document.createElement('p');
+						subtitle.className = 'subtitle subtitle--up';
+						header.appendChild(subtitle);
+					}
+					subtitle.textContent = 'Aw Man... You ate it all :(';
+					subtitle.classList.remove('subtitle--hidden');
+					subtitle.classList.add('subtitle--up');
+
+					// after a short pause, swap to the playful follow-up message with a fade transition
+					setTimeout(()=>{
+						// fade out
+						subtitle.classList.add('subtitle--hidden');
+						setTimeout(()=>{
+							// change text and fade back in
+							subtitle.textContent = "Wait I think there's one more candy!";
+							// swap the XOXO heart image to the smile heart
+							const xoxo = document.querySelector('.heart.xoxo');
+							if(xoxo){
+								xoxo.src = 'assets/smileheart.svg';
+								xoxo.alt = 'smile heart';
+								xoxo.classList.remove('crumbed');
+							}
+							subtitle.classList.remove('subtitle--hidden');
+							subtitle.classList.add('subtitle--up');
+						}, 420); 
+					}, 1400);
+				}
+			}
 		}
 		currentHeart = null;
 	}
