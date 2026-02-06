@@ -2,6 +2,8 @@ document.addEventListener('DOMContentLoaded', function(){
 	const box = document.getElementById('box');
 	const container = document.getElementById('boxContainer');
 	if(!box || !container) return;
+	let celebrated = false;
+
 
 	function activateBox(){
 		// only open once; ignore further presses
@@ -68,72 +70,122 @@ document.addEventListener('DOMContentLoaded', function(){
 	function openModalForHeart(heartEl){
 		if(!modal) return;
 		let closeup = heartEl.dataset.closeup || heartEl.getAttribute('src') || '';
-		// if this heart is the temporary smile heart (or already the final candy),
-		// show the final candy closeup in the modal instead of the default closeup
 		const src = heartEl.getAttribute('src') || '';
 		let specialCase = false;
-		if(src.indexOf('smileheart.svg') !== -1 || src.indexOf('finalcandyheart.svg') !== -1){
-			closeup = 'assets/finalcandyheart.svg';
-			// show final candy in the middle and YES images on sides
+
+		// show the chooser question candy with YEssss
+		if(src.indexOf('sadheart.svg') !== -1){
+			closeup = 'assets/sadheart.svg';
 			const center = document.querySelector('.heart.xoxo');
 			const left = document.querySelector('.heart.loveya');
 			const right = document.querySelector('.heart.urcute');
-			const subtitle = document.querySelector('.subtitle');;
-			if(subtitle){
-					subtitle.textContent = 'Choose wisely >:(';
-			}
+			const subtitle = document.querySelector('.subtitle');
+			if(subtitle){ subtitle.textContent = 'Choose wisely >:('; }
 
 			if(center){
-				center.src = 'assets/finalcandyheart.svg';
+				center.src = 'assets/usheart.svg';
 				center.alt = 'final candy heart';
 			}
-			if(left){
-				left.src = 'assets/yes1.svg';
-				left.alt = 'YES';
-				left.classList.remove('crumbed');
-				left.dataset.crumb = '';
-			}
-			if(right){
-				right.src = 'assets/yes2.svg';
-				right.alt = 'YES';
-				right.classList.remove('crumbed');
-				right.dataset.crumb = '';
-			}
-			// open modal without backdrop or close button for this special case
+			if(left){ left.src = 'assets/yes1.svg'; left.alt = 'YES'; left.classList.remove('crumbed'); left.dataset.crumb = ''; left.style.visibility = ''; }
+			if(right){ right.src = 'assets/yes2.svg'; right.alt = 'YES'; right.classList.remove('crumbed'); right.dataset.crumb = ''; right.style.visibility = ''; }
+
 			modal.classList.add('no-backdrop','no-close');
-			// hide the close button and mark it hidden for accessibility
-			if(modalCloseBtn){
-				modalCloseBtn.style.display = 'none';
-				modalCloseBtn.setAttribute('aria-hidden','true');
-			}
-			// make the modal background clear so underlying page shows through
+			if(modalCloseBtn){ modalCloseBtn.style.display = 'none'; modalCloseBtn.setAttribute('aria-hidden','true'); }
 			if(modal) modal.style.background = 'transparent';
 			specialCase = true;
+		} else if(src.indexOf('smileheart.svg') !== -1){
+			closeup = 'assets/sadheart.svg';
+			const center = document.querySelector('.heart.xoxo');
+			const left = document.querySelector('.heart.loveya');
+			const right = document.querySelector('.heart.urcute');
+			const subtitle = document.querySelector('.subtitle');
+			if(subtitle){ subtitle.textContent = 'Choose wisely >:('; }
+
+			// update on-page hearts to show the YES side images so they remain clickable
+			if(center){
+				center.src = 'assets/sadcandyheart.svg';
+				center.alt = 'final candy heart';
+			}
+			if(left){ left.src = 'assets/yes1.svg'; left.alt = 'YES'; left.classList.remove('crumbed'); left.dataset.crumb = ''; left.style.visibility = ''; }
+			if(right){ right.src = 'assets/yes2.svg'; right.alt = 'YES'; right.classList.remove('crumbed'); right.dataset.crumb = ''; right.style.visibility = ''; }
+
+			// Show modal (large) but remove backdrop/close UI
+			if(modal){
+				modal.classList.add('no-backdrop','no-close','open');
+				modal.setAttribute('aria-hidden','false');
+				if(modalCloseBtn){ modalCloseBtn.style.display = 'none'; modalCloseBtn.setAttribute('aria-hidden','true'); }
+				modal.style.background = 'transparent';
+				// allow clicks to pass through the modal so on-page YES hearts remain clickable
+				modal.style.pointerEvents = 'none';
+				// also ensure the modal image doesn't capture pointer events
+				if(modalImg) modalImg.style.pointerEvents = 'none';
+				// set the modal image directly so it displays large
+				if(modalImg) { modalImg.src = closeup; modalImg.alt = 'question candy'; }
+			}
+			specialCase = true;
 		}
+
+		// If the clicked heart is one of the YES side images, treat as the final selection
+		if(src.indexOf('yes1.svg') !== -1 || src.indexOf('yes2.svg') !== -1){
+			const center = document.querySelector('.heart.xoxo');
+			const left = document.querySelector('.heart.loveya');
+			const right = document.querySelector('.heart.urcute');
+			// Do NOT change the on-page center heart immediately -
+			// show the final heart in the modal first to avoid a double transition.
+			if(left) left.style.visibility = 'hidden';
+			if(right) right.style.visibility = 'hidden';
+
+
+			// If the chooser is currently shown in the modal, swap the modal image
+			// to the final candy so the user sees the change, then celebrate.
+			if(modal && modal.classList.contains('open')){
+				
+					// close the modal
+					if(modal) modal.classList.remove('open');
+					triggerCelebrate();
+			}
+			currentHeart = null;
+			specialCase = true;
+		}
+
 		modalImg.src = closeup;
 		modalImg.alt = (src.indexOf('finalcandyheart.svg') !== -1 || src.indexOf('smileheart.svg') !== -1) ? 'final candy' : (heartEl.alt || '');
 		if(modalText) modalText.textContent = heartEl.dataset.text || heartEl.alt || '';
-		modal.classList.add('open');
-		modal.setAttribute('aria-hidden','false');
-		currentHeart = specialCase ? null : heartEl;
+		// Only open the modal for normal hearts. For the "chooser"
+		// special case we update the on-page hearts so the YES images remain clickable.
+		if(!specialCase){
+			modal.classList.add('open');
+			modal.setAttribute('aria-hidden','false');
+			currentHeart = heartEl;
+		} else {
+			currentHeart = null;
+		}
 	}
 
 	function closeModal(){
 		if(!modal) return;
 		modal.classList.remove('open');
-		// ensure any special modal flags are cleared
 		modal.classList.remove('no-backdrop','no-close');
 		modal.setAttribute('aria-hidden','true');
 		modalImg.src = '';
 		if(modalText) modalText.textContent = '';
+
 		// restore close button and background when modal closes
-		if(modalCloseBtn){
-			modalCloseBtn.style.display = '';
-			modalCloseBtn.removeAttribute('aria-hidden');
-		}
+		if(modalCloseBtn){ modalCloseBtn.style.display = ''; modalCloseBtn.removeAttribute('aria-hidden'); }
 		if(modal) modal.style.background = '';
 
-		// replace the heart image with the crumb image
+		// restore pointer events in case the modal had been made click-through
+		if(modal) modal.style.pointerEvents = '';
+		if(modalImg) modalImg.style.pointerEvents = '';
+
+		// remove decorative mini-love icons and restore side hearts
+		const left = document.querySelector('.heart.loveya');
+		const right = document.querySelector('.heart.urcute');
+		if(left) left.style.visibility = '';
+		if(right) right.style.visibility = '';
+		document.querySelectorAll('.mini-love').forEach(n=>n.remove());
+
+		// replace the heart image with the crumb image 
 		if(currentHeart && currentHeart.dataset.crumb){
 			currentHeart.src = currentHeart.dataset.crumb;
 			currentHeart.classList.add('crumbed');
@@ -163,26 +215,81 @@ document.addEventListener('DOMContentLoaded', function(){
 							subtitle.textContent = "Wait I think there's one more candy!";
 							// swap the XOXO heart image to the smile heart
 							const xoxo = document.querySelector('.heart.xoxo');
-							if(xoxo){
-								xoxo.src = 'assets/smileheart.svg';
-								xoxo.alt = 'smile heart';
-								xoxo.classList.remove('crumbed');
-							}
+							if(xoxo){ xoxo.src = 'assets/smileheart.svg'; xoxo.alt = 'smile heart'; xoxo.classList.remove('crumbed'); }
 							subtitle.classList.remove('subtitle--hidden');
 							subtitle.classList.add('subtitle--up');
-						}, 420); 
-					}, 1400);
+						}, 1000); 
+					}, 1000);
 				}
 			}
 		}
 		currentHeart = null;
 	}
 
+	// trigger full-page celebration view after YES selection
+	function triggerCelebrate(){
+		// hide modal if open
+		if(modal) modal.classList.remove('open');
+
+		// update header subtitle to celebrate
+		const header = document.querySelector('.site-header');
+		if(header){
+			let subtitle = header.querySelector('.subtitle');
+			if(!subtitle){
+				subtitle = document.createElement('p');
+				subtitle.className = 'subtitle subtitle--up';
+				header.appendChild(subtitle);
+			}
+			subtitle.textContent = 'YIPEEE! I LOVE YOUUU MWAHHH~';
+			subtitle.classList.remove('subtitle--hidden');
+			subtitle.classList.add('subtitle--up');
+		}
+
+		// mark container as celebration state
+		container.classList.add('celebrate');
+
+		// center heart becomes final candy
+		const center = document.querySelector('.heart.xoxo');
+		const left = document.querySelector('.heart.loveya');
+		const right = document.querySelector('.heart.urcute');
+		if(center){
+			center.src = 'assets/usheart.svg';
+			center.alt = 'final candy heart';
+			center.classList.add('crumbed');
+			center.style.pointerEvents = 'none';
+		}
+		if(left) left.style.display = 'none';
+		if(right) right.style.display = 'none';
+
+
+		// add floating mini hearts around the screen 
+		const positions = [
+			{left:'8%', top:'22%'}, {left:'18%', top:'58%'}, {left:'28%', top:'36%'},
+			{right:'8%', top:'22%'}, {right:'18%', top:'58%'}, {right:'28%', top:'36%'},
+			{left:'35%', top:'8%'}, {left:'60%', top:'72%'}
+		];
+		positions.forEach((pos,i)=>{
+			if(document.querySelector('.float-heart-'+i)) return; // avoid duplicates
+			const f = document.createElement('img');
+			f.src = 'assets/minilove.svg';
+			f.className = 'float-heart float-heart-'+i;
+			f.style.position = 'fixed';
+			f.style.zIndex = 8;
+			f.style.pointerEvents = 'none';
+			if(pos.left) f.style.left = pos.left;
+			if(pos.right) f.style.right = pos.right;
+			f.style.top = pos.top;
+			document.body.appendChild(f);
+			// show animation
+			requestAnimationFrame(()=> f.classList.add('show'));
+		});
+	}
+
 	// attach click handlers to hearts; only active once container is settled
 	const hearts = document.querySelectorAll('.heart');
 	hearts.forEach(h=>{
 		h.addEventListener('click', function(e){
-			// ignore if not settled yet or this heart has been crumbed (disabled)
+			// ignore if not settled yet or this heart has been crumbed 
 			if(!container.classList.contains('settled')) return;
 			if(h.classList.contains('crumbed')) return;
 			openModalForHeart(h);
@@ -197,7 +304,6 @@ document.addEventListener('DOMContentLoaded', function(){
 	});
 	if(modal){
 		modal.addEventListener('click', function(e){
-			// when final candy is shown we intentionally disable backdrop/outer clicks
 			if(modal.classList.contains('no-backdrop')) return;
 			if(e.target === modal || e.target.classList.contains('modal-backdrop')) closeModal();
 		});
