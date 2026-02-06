@@ -252,7 +252,13 @@ document.addEventListener('DOMContentLoaded', function(){
 		const center = document.querySelector('.heart.xoxo');
 		const left = document.querySelector('.heart.loveya');
 		const right = document.querySelector('.heart.urcute');
-		if(center){ center.src = 'assets/cats/finalcandyheart.svg'; center.alt = 'final candy heart'; }
+		if(center){
+			center.src = 'assets/cats/finalcandyheart.svg';
+			center.alt = 'final candy heart';
+			// disable further interaction on the final heart
+			center.classList.add('crumbed');
+			center.style.pointerEvents = 'none';
+		}
 		if(left) left.style.display = 'none';
 		if(right) right.style.display = 'none';
 
