@@ -82,7 +82,7 @@ document.addEventListener('DOMContentLoaded', function(){
 
 		// show the chooser question candy with YEssss
 		if(src.indexOf('questioncandyheart.svg') !== -1){
-			closeup = 'assets/cats/questioncandyheart.svg';
+			closeup = 'assets/sadheart.svg';
 			const center = document.querySelector('.heart.xoxo');
 			const left = document.querySelector('.heart.loveya');
 			const right = document.querySelector('.heart.urcute');
@@ -90,7 +90,7 @@ document.addEventListener('DOMContentLoaded', function(){
 			if(subtitle){ subtitle.textContent = 'Choose wisely >:('; }
 
 			if(center){
-				center.src = 'assets/cats/questioncandyheart.svg';
+				center.src = 'assets/usheart.svg';
 				center.alt = 'final candy heart';
 				console.log(center.className);
 			}
@@ -114,7 +114,7 @@ document.addEventListener('DOMContentLoaded', function(){
 			if(modal) modal.style.background = 'transparent';
 			specialCase = true;
 		} else if(src.indexOf('smileheart.svg') !== -1){
-			closeup = 'assets/cats/questioncandyheart.svg';
+			closeup = 'assets/sadheart.svg';
 			const center = document.querySelector('.heart.xoxo');
 			const left = document.querySelector('.heart.loveya');
 			const right = document.querySelector('.heart.urcute');
@@ -123,7 +123,7 @@ document.addEventListener('DOMContentLoaded', function(){
 
 			// update on-page hearts to show the YES side images so they remain clickable
 			if(center){
-				center.src = 'assets/cats/questioncandyheart.svg';
+				center.src = 'assets/sadheart.svg';
 				center.alt = 'final candy heart';
 			}
 			if(left){ 
@@ -191,7 +191,7 @@ document.addEventListener('DOMContentLoaded', function(){
 		}
 
 		modalImg.src = closeup;
-		modalImg.alt = (src.indexOf('finalcandyheart.svg') !== -1 || src.indexOf('smileheart.svg') !== -1) ? 'final candy' : (heartEl.alt || '');
+		modalImg.alt = (src.indexOf('usheart.svg') !== -1 || src.indexOf('smileheart.svg') !== -1) ? 'final candy' : (heartEl.alt || '');
 		if(modalText) modalText.textContent = heartEl.dataset.text || heartEl.alt || '';
 		// Only open the modal for normal hearts. For the "chooser"
 		// special case we update the on-page hearts so the YES images remain clickable.
@@ -298,7 +298,7 @@ document.addEventListener('DOMContentLoaded', function(){
 		const left = document.querySelector('.heart.loveya');
 		const right = document.querySelector('.heart.urcute');
 		if(center){
-			center.src = 'assets/cats/finalcandyheart.svg';
+			center.src = 'assets/usheart.svg';
 			center.alt = 'final candy heart';
 			// disable further interaction on the final heart
 			center.classList.add('final');
