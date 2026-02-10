@@ -1,6 +1,7 @@
-const music = new Audio('assets/valentine-tune.mp3');
+//hopefully not too loud making the music softer (?)))
+const music = new Audio('assets/qot.mp3');
 music.loop = true;
-music.volume = 0.5;
+music.volume = 0.3;
 music.play();
 
 
