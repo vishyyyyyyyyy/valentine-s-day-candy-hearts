@@ -32,26 +32,55 @@ body{
     transform:translateY(8px) scale(.98);
     transition:opacity .45s ease, transform .45s cubic-bezier(.2,.9,.3,1);
 }
-.mini-love.left{ left:8%; top:40%; }
-.mini-love.right{ right:8%; top:40%; }
-.mini-love.show{ opacity:1; transform:translateY(0) scale(1); }
+.mini-love.left{ 
+    left:8%; 
+    top:40%; }
+.mini-love.right{ 
+    right:8%; 
+    top:40%; }
+.mini-love.show{ 
+    opacity:1; 
+    transform:translateY(0) scale(1);
+ }
 
 /* celebration layout when user confirms YES */
-.box-container.celebrate{ width:100%; max-width:100vw; }
+.box-container.celebrate{ 
+    width:100%; 
+    max-width:100vw; 
+}
 .box-container.celebrate .heart.xoxo{
-    left:50%; top:50%; transform:translate(-50%,-50%); width: clamp(240px, 44vw, 520px); z-index:6;
+    left:50%; 
+    top:50%; 
+    transform:translate(-50%,-50%); 
+    width: clamp(240px, 44vw, 520px); 
+    z-index:6;
 }
 .box-container.celebrate .heart.loveya,
 .box-container.celebrate .heart.urcute{ display:none; }
 .final-caption{
-    position:absolute; left:50%; transform:translateX(-50%); top:66%; text-align:center;
-    font-family: 'Lilita One', cursive; color:#fff; font-size:clamp(20px,3.4vw,42px);
-    z-index:7; white-space:pre-line; text-shadow:0 4px 0 rgba(0,0,0,0.18);
+    position:absolute; 
+    left:50%; 
+    transform:translateX(-50%); 
+    top:66%; 
+    text-align:center;
+    font-family: 'Lilita One', cursive; color:#fff;
+     font-size:clamp(20px,3.4vw,42px);
+    z-index:7; 
+    white-space:pre-line; 
+    text-shadow:0 4px 0 rgba(0,0,0,0.18);
 }
 
 /* floating decorative hearts placed around the page */
-.float-heart{ width:88px; opacity:.95; transform:translateY(6px) scale(.98); transition:transform .6s ease, opacity .6s ease; }
-.float-heart.show{ transform:translateY(0) scale(1); opacity:1; }
+.float-heart{ 
+    width:88px; 
+    opacity:.95; 
+    transform:translateY(6px) scale(.98); 
+    transition:transform .6s ease, opacity .6s ease; 
+}
+.float-heart.show{ 
+    transform:translateY(0) scale(1); 
+    opacity:1; 
+}
 
 #top-lace, #bottom-lace{
     width:100%;
@@ -179,7 +208,7 @@ body{
     display:flex;
     align-items:center;
     justify-content:center;
-    padding: 1vh 2vw; /* allow room for absolute hearts */
+    padding: 1vh 2vw;
 }
 
 .box{
@@ -188,7 +217,7 @@ body{
     justify-content:center;
     transform-origin:center center;
     transition:transform .7s cubic-bezier(.2,.9,.3,1), left .7s, top .7s;
-    z-index:5; /* ensure box is above lace and header */
+    z-index:5;
 }
 
 .hearts{
@@ -398,6 +427,7 @@ body{
     transform:translateY(-160%) scale(.7);
     opacity:0;
     transition: transform .6s ease, opacity .45s ease;
+    pointer-events:none;
 }
 .box-container.settled .heart{
     width: clamp(100px, 36vw, 160px);
@@ -480,8 +510,9 @@ body{
     }
 }
 
+        
 @media (max-width:900px){
-    /* reduce the box shift when opening on narrower screens */
+    /* reduce the box shift  */
     .box-container.open .box{
         transform:translate(-24vw,-32px) rotate(100deg) scale(.95);
     }
@@ -502,20 +533,130 @@ body{
     .modal-heart-wrap img{ max-width:86vw; }
 }
 
-@media (max-width:420px){
-    .site-header h1{ padding-top:12px; }
-    .subtitle{ margin: 0; }
+@media (max-width:800px){
+
+    .box-container.settled .heart.loveya{
+       left:-15%; 
+        top:80%; 
+    }
+    .box-container.settled .heart.xoxo{  
+         left:50%; 
+        top:30%; 
+    }
+    .box-container.settled .heart.urcute{ 
+        left:115%; 
+        top:100%; 
+    }
+
+}
+
+@media (max-width:500px){
+    img.heart.xoxo.final{
+        width: clamp(240px, 60vw, 400px);
+        max-width:100%;
+    }
+    float-heart float-heart-1{
+        left:12%;
+        top:32%;
+        width: 30px;
+    }
+     float-heart float-heart-1{
+        left:12%;
+        top:32%;
+        width: 30px;
+    }
+    
+    .float-heart.float-heart-2.show{
+        position: fixed;
+        z-index: 8;
+        pointer-events: none;
+        left: 0% !important;
+        right: auto !important; 
+        top: 36%;
+    }
+     .float-heart.float-heart-1.show{
+        position: fixed;
+        z-index: 8;
+        pointer-events: none;
+        left: 5% !important;
+        right: auto !important; 
+        top: 36%;
+    }
+
+    .float-heart.float-heart-6.show{
+        position: fixed;
+        z-index: 8;
+        pointer-events: none;
+        left: 40% !important;
+        right: auto !important; 
+        top: 0%;
+    }
+
+    #modalHeartImg
+    {
+        width: clamp(240px, 60vw, 400px);
+        top: 30%;
+        max-width:100%;
+    }
+    .site-header h1{ 
+        padding-top:12px; 
+    }
+    .subtitle{
+        margin: 0; 
+    }
     .box-container{
-         aspect-ratio: 1.4 / 1; }
-    .box-container.open .box{ transform:translate(-18vw,-12px) rotate(90deg) scale(.92); }
-    .box-container.open .heart.loveya{ left:56%; top:34%; }
-    .box-container.open .heart.xoxo{ left:32%; top:78%; }
-    .box-container.open .heart.urcute{ left:76%; top:86%; }
-    .box-container.settled .heart{ width: clamp(80px, 40vw, 140px); }
-    .header-heart{ width:36px; top:-10px }
-    .modal-close{ right:12px; top:8px }
-    /* ensure settled hearts stay separated on very small screens as well */
-    .box-container.settled .heart.loveya{ left:4%; top:50%; }
-    .box-container.settled .heart.xoxo{ left:50%; top:50%; }
-    .box-container.settled .heart.urcute{ left:96%; top:50%; }
+         aspect-ratio: 1.4 / 1; 
+        }
+    .box-container.open .box{
+        transform:translate(-18vw,-12px) rotate(90deg) scale(.92); 
+    }
+    .box-container.open .heart.loveya{ 
+        left:56%; top:34%;
+    }
+    .box-container.open .heart.xoxo{ 
+        left:32%;
+        top:78%;
+    }
+    .box-container.open .heart.urcute{ 
+        left:76%;
+        top:86%; 
+    }
+    .box-container.settled .heart{ 
+        width: clamp(80px, 40vw, 140px); 
+    }
+    .header-heart{ 
+        width:36px; 
+        top:-10px;
+    }
+    .modal-close{ 
+        right:12px; 
+        top:8px;
+    }
+
+    .box-container.settled .heart.loveya{
+        left:50%; 
+        top:0%; 
+    }
+    .box-container.settled .heart.xoxo{ 
+        left:50%; 
+        top:70%; 
+    }
+    .box-container.settled .heart.urcute{ 
+        left:50%; 
+        top:145%; 
+    }
+}
+@media (max-width:320px){
+    .box-container.settled .heart.loveya{
+        left:50%; 
+        top:0%; 
+    }
+    .box-container.settled .heart.xoxo{ 
+        left:50%; 
+        top:50%; 
+    }
+    .box-container.settled .heart.urcute{ 
+        left:50%; 
+        top:100%; 
+    }
 }

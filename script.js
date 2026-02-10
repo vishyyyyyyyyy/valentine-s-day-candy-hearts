@@ -1,3 +1,9 @@
+const music = new Audio('assets/valentine-tune.mp3');
+music.loop = true;
+music.volume = 0.5;
+music.play();
+
+
 document.addEventListener('DOMContentLoaded', function(){
 	const box = document.getElementById('box');
 	const container = document.getElementById('boxContainer');
@@ -6,7 +12,7 @@ document.addEventListener('DOMContentLoaded', function(){
 
 
 	function activateBox(){
-		// only open once; ignore further presses
+		// only open once
 		if(container.classList.contains('open')) return;
 
 		box.classList.add('pressed');
@@ -15,7 +21,7 @@ document.addEventListener('DOMContentLoaded', function(){
 		container.classList.add('open');
 		box.setAttribute('aria-pressed', 'true');
 
-		// update the subtitle text and move it up; remove the header logo/heading
+		// update the subtitle text and move up, remove header
 		const header = document.querySelector('.site-header');
 		let subtitle;
 		if(header){
@@ -36,7 +42,7 @@ document.addEventListener('DOMContentLoaded', function(){
 			if(hh) hh.remove();
 		}
 
-		// after open animation finishes, move box away and center/enlarge hearts
+		// after open animation finishes, move box away and hearts
 		setTimeout(()=>{
 			container.classList.add('settled');
 			// when settled transitions complete, reveal and move up the subtitle
@@ -85,12 +91,25 @@ document.addEventListener('DOMContentLoaded', function(){
 			if(center){
 				center.src = 'assets/cats/questioncandyheart.svg';
 				center.alt = 'final candy heart';
+				console.log(center.className);
 			}
-			if(left){ left.src = 'assets/yes1.svg'; left.alt = 'YES'; left.classList.remove('crumbed'); left.dataset.crumb = ''; left.style.visibility = ''; }
-			if(right){ right.src = 'assets/yes2.svg'; right.alt = 'YES'; right.classList.remove('crumbed'); right.dataset.crumb = ''; right.style.visibility = ''; }
+			if(left){ left.src = 'assets/yes1.svg'; left.alt = 'YES'; 
+				left.classList.remove('crumbed'); 
+				left.dataset.crumb = ''; 
+				left.style.visibility = '';
+			} 
+			if(right){ 
+				right.src = 'assets/yes2.svg';
+				right.alt = 'YES';
+				right.classList.remove('crumbed');
+				right.dataset.crumb = '';
+				right.style.visibility = '';
+			 }
 
 			modal.classList.add('no-backdrop','no-close');
-			if(modalCloseBtn){ modalCloseBtn.style.display = 'none'; modalCloseBtn.setAttribute('aria-hidden','true'); }
+			if(modalCloseBtn){ 
+				modalCloseBtn.style.display = 'none';
+				modalCloseBtn.setAttribute('aria-hidden','true'); }
 			if(modal) modal.style.background = 'transparent';
 			specialCase = true;
 		} else if(src.indexOf('smileheart.svg') !== -1){
@@ -106,21 +125,43 @@ document.addEventListener('DOMContentLoaded', function(){
 				center.src = 'assets/cats/questioncandyheart.svg';
 				center.alt = 'final candy heart';
 			}
-			if(left){ left.src = 'assets/yes1.svg'; left.alt = 'YES'; left.classList.remove('crumbed'); left.dataset.crumb = ''; left.style.visibility = ''; }
-			if(right){ right.src = 'assets/yes2.svg'; right.alt = 'YES'; right.classList.remove('crumbed'); right.dataset.crumb = ''; right.style.visibility = ''; }
+			if(left){ 
+				left.src = 'assets/yes1.svg'; 
+				left.alt = 'YES'; 
+				left.classList.remove('crumbed'); 
+				left.classList.add('question');
+				left.classList.add('question-top');
+				left.dataset.crumb = ''; 
+				left.style.visibility = ''; 
+			}
+			if(right){ 
+				right.src = 'assets/yes2.svg'; 
+				right.alt = 'YES'; 
+				right.classList.remove('crumbed'); 
+				right.classList.add('question');
+				right.classList.add('question-bottom');
+				right.dataset.crumb = ''; 
+				right.style.visibility = ''; 
+			}
 
-			// Show modal (large) but remove backdrop/close UI
+			// Show modal but no balck bg
 			if(modal){
 				modal.classList.add('no-backdrop','no-close','open');
 				modal.setAttribute('aria-hidden','false');
-				if(modalCloseBtn){ modalCloseBtn.style.display = 'none'; modalCloseBtn.setAttribute('aria-hidden','true'); }
+				if(modalCloseBtn){ 
+					modalCloseBtn.style.display = 'none'; 
+					modalCloseBtn.setAttribute('aria-hidden','true'); 
+				}
 				modal.style.background = 'transparent';
 				// allow clicks to pass through the modal so on-page YES hearts remain clickable
 				modal.style.pointerEvents = 'none';
 				// also ensure the modal image doesn't capture pointer events
 				if(modalImg) modalImg.style.pointerEvents = 'none';
 				// set the modal image directly so it displays large
-				if(modalImg) { modalImg.src = closeup; modalImg.alt = 'question candy'; }
+				if(modalImg) { 
+					modalImg.src = closeup; 
+					modalImg.alt = 'question candy'; 
+				}
 			}
 			specialCase = true;
 		}
@@ -183,6 +224,9 @@ document.addEventListener('DOMContentLoaded', function(){
 		const right = document.querySelector('.heart.urcute');
 		if(left) left.style.visibility = '';
 		if(right) right.style.visibility = '';
+		// remove temporary question positioning classes (for narrow screens)
+		if(left){ left.classList.remove('question','question-top','question-bottom'); }
+		if(right){ right.classList.remove('question','question-top','question-bottom'); }
 		document.querySelectorAll('.mini-love').forEach(n=>n.remove());
 
 		// replace the heart image with the crumb image 
@@ -206,7 +250,7 @@ document.addEventListener('DOMContentLoaded', function(){
 					subtitle.classList.remove('subtitle--hidden');
 					subtitle.classList.add('subtitle--up');
 
-					// after a short pause, swap to the playful follow-up message with a fade transition
+					//one more candysition
 					setTimeout(()=>{
 						// fade out
 						subtitle.classList.add('subtitle--hidden');
@@ -256,7 +300,8 @@ document.addEventListener('DOMContentLoaded', function(){
 			center.src = 'assets/cats/finalcandyheart.svg';
 			center.alt = 'final candy heart';
 			// disable further interaction on the final heart
-			center.classList.add('crumbed');
+			center.classList.add('final');
+			console.log(center.className);
 			center.style.pointerEvents = 'none';
 		}
 		if(left) left.style.display = 'none';
@@ -270,7 +315,7 @@ document.addEventListener('DOMContentLoaded', function(){
 			{left:'35%', top:'8%'}, {left:'60%', top:'72%'}
 		];
 		positions.forEach((pos,i)=>{
-			if(document.querySelector('.float-heart-'+i)) return; // avoid duplicates
+			if(document.querySelector('.float-heart-'+i)) return;
 			const f = document.createElement('img');
 			f.src = 'assets/minilove.svg';
 			f.className = 'float-heart float-heart-'+i;
